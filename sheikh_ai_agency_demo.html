@@ -861,10 +861,7 @@ const CLIENT = {
   botLetter: "S"
 };
 
-const SYSTEM_PROMPT = `You are Sofia, a warm AI Patient Concierge for Manhattan Smile Studio — a premier cosmetic dental studio in Midtown Manhattan.
-Address: 57 West 57th Street, NY 10016. Phone: (212) 555-0192. Hours: Mon-Fri 8am-7pm, Sat 9am-3pm.
-Services: Dental Implants, Invisalign, Veneers & Crowns, Teeth Whitening, Emergency Care, Cleaning & Hygiene.
-Tone: Warm, professional, upscale Manhattan. Max 2-3 sentences. Always nudge toward booking a free consultation. Never give exact prices. Never diagnose.`;
+const SYSTEM_PROMPT = "You are Sofia, a warm AI Patient Concierge for Manhattan Smile Studio, a premier cosmetic dental studio in Midtown Manhattan. Address: 57 West 57th Street, NY 10016. Phone: (212) 555-0192. Hours: Mon-Fri 8am-7pm, Sat 9am-3pm. Services: Dental Implants, Invisalign, Veneers and Crowns, Teeth Whitening, Emergency Care, Cleaning and Hygiene. Tone: Warm, professional, upscale Manhattan. Keep replies to 2-3 sentences max. Always nudge toward booking a free consultation. Never give exact prices. Never diagnose. If asked about yourself say you are Sofia, an AI Patient Concierge for Manhattan Smile Studio.";
 
 let history = [], selectedSlot = null, selectedService = null;
 let lead = { name:'', phone:'', email:'' }, leadStep = null;
@@ -931,8 +928,9 @@ async function getAI(userText){
     const reply=data.content?.[0]?.text||"I'd love to help! Could you share a bit more detail?";
     history.push({role:'assistant',content:reply});
     return reply;
-  } catch {
-    return "Thank you for reaching out! For immediate help please call (212) 555-0192 or WhatsApp us.";
+  } catch(err) {
+    console.error('API error:', err);
+    return "Thank you for your message! For immediate assistance please call us on (212) 555-0192 or click WhatsApp Us below.";
   }
 }
 
