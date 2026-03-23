@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manhattan Smile Studio – AI Concierge</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:       #0b1f35;
+    --navy-mid:   #122840;
+    --navy-light: #1a3a58;
+    --gold:       #c9a84c;
+    --gold-light: #e2c072;
+    --gold-pale:  #f5ecd4;
+    --cream:      #faf7f2;
+    --white:      #ffffff;
+    --grey:       #6b7280;
+    --border:     #e8e0d0;
+    --shadow:     0 24px 64px rgba(11,31,53,0.22);
+  }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: linear-gradient(160deg, #0b1f35 0%, #1a3a58 60%, #0e2840 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* LAYOUT */
+  .demo-wrap {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    max-width: 1080px;
+    width: 100%;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    flex: 1;
+    padding-top: 10px;
+    color: white;
+  }
+
+  .clinic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 24px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gold-light);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .clinic-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .left-panel h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    color: white;
+  }
+
+  .left-panel h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .left-panel .location {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .left-panel p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.75;
+    margin-bottom: 28px;
+  }
+
+  .info-list { list-style: none; }
+  .info-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .info-list li .icon {
+    width: 22px;
+    height: 22px;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .hours-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .hour-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+
+  .hour-card .day {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3px;
+  }
+
+  .hour-card .time {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+
+  .powered-by {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .powered-by span { color: var(--gold); }
+
+  /* CHAT WIDGET */
+  .chat-container { width: 370px; flex-shrink: 0; }
+
+  .chat-widget {
+    background: var(--cream);
+    border-radius: 20px;
+    box-shadow: var(--shadow), 0 0 0 1px rgba(201,168,76,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 640px;
+    animation: riseUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes riseUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* HEADER */
+  .chat-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    position: relative;
+  }
+
+  .chat-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 18px; right: 18px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+  }
+
+  .header-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--navy);
+    font-weight: 600;
+    flex-shrink: 0;
+    border: 2px solid rgba(201,168,76,0.4);
+  }
+
+  .online-dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: #22c55e;
+    border-radius: 50%;
+    border: 2px solid var(--navy);
+    bottom: 14px; left: 48px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.35); opacity: 0.7; }
+  }
+
+  .header-info { flex: 1; }
+  .header-info .name {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.3px;
+  }
+  .header-info .role {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 1px;
+  }
+
+  .header-brand {
+    text-align: right;
+    font-family: 'Playfair Display', serif;
+  }
+  .header-brand .bn {
+    font-size: 13px;
+    color: var(--gold-light);
+    font-weight: 500;
+    display: block;
+  }
+  .header-brand .bs {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* MESSAGES */
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 14px;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+  }
+
+  .chat-messages::-webkit-scrollbar { width: 3px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* BOT MSG */
+  .msg-bot {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    animation: fadeL 0.3s ease;
+  }
+
+  @keyframes fadeL { from { opacity:0; transform: translateX(-8px); } to { opacity:1; transform: translateX(0); } }
+  @keyframes fadeR { from { opacity:0; transform: translateX(8px); } to { opacity:1; transform: translateX(0); } }
+
+  .bot-av {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .bot-bubble {
+    background: white;
+    border-radius: 16px 16px 16px 3px;
+    padding: 11px 14px;
+    font-size: 13.5px;
+    color: var(--navy);
+    line-height: 1.55;
+    box-shadow: 0 2px 10px rgba(11,31,53,0.07);
+    max-width: 255px;
+    border: 1px solid rgba(232,224,208,0.8);
+  }
+
+  .bot-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 3px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  /* USER MSG */
+  .msg-user {
+    display: flex;
+    justify-content: flex-end;
+    animation: fadeR 0.3s ease;
+  }
+
+  .user-bubble {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: white;
+    border-radius: 16px 16px 3px 16px;
+    padding: 11px 14px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    max-width: 210px;
+    box-shadow: 0 3px 12px rgba(11,31,53,0.25);
+  }
+
+  /* QUICK REPLIES */
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 2px;
+    animation: fadeL 0.3s ease 0.1s both;
+    padding-left: 38px;
+  }
+
+  .qr-btn {
+    background: white;
+    border: 1.5px solid var(--gold);
+    color: var(--navy);
+    border-radius: 20px;
+    padding: 6px 13px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Jost', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .qr-btn:hover, .qr-btn.active {
+    background: var(--gold);
+    color: var(--navy);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201,168,76,0.35);
+  }
+
+  .qr-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+  /* BOOKING CARD */
+  .booking-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    max-width: 265px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(11,31,53,0.06);
+    margin-left: 38px;
+    animation: fadeL 0.4s ease;
+  }
+
+  .bc-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .bc-title::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  .slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .slot {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 6px;
+    font-size: 11.5px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--navy);
+    font-weight: 500;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+
+  .slot:hover, .slot.sel {
+    background: var(--gold-pale);
+    border-color: var(--gold);
+    color: var(--navy);
+  }
+
+  .confirm-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: white;
+    border: none;
+    border-radius: 9px;
+    padding: 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: 'Jost', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .confirm-btn:hover {
+    background: var(--gold);
+    color: var(--navy);
+    box-shadow: 0 4px 14px rgba(201,168,76,0.4);
+  }
+
+  /* CONFIRMED */
+  .confirmed-card {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    border-radius: 14px;
+    padding: 16px;
+    color: white;
+    max-width: 255px;
+    margin-left: 38px;
+    border: 1px solid rgba(201,168,76,0.3);
+    animation: fadeL 0.4s ease;
+  }
+
+  .confirmed-card .cc-gold { color: var(--gold-light); font-size: 12px; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .confirmed-card .cc-title { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 6px; }
+  .confirmed-card .cc-detail { font-size: 12px; opacity: 0.75; line-height: 1.6; }
+
+  /* WHATSAPP */
+  .wa-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px;
+    max-width: 255px;
+    border: 1px solid var(--border);
+    margin-left: 38px;
+    animation: fadeL 0.4s ease;
+  }
+
+  .wa-title { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+  .wa-sub { font-size: 12px; color: var(--grey); line-height: 1.5; margin-bottom: 10px; }
+
+  .wa-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #25d366;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: 'Jost', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+  }
+
+  .wa-btn:hover { background: #20ba5a; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,211,102,0.3); }
+
+  /* TYPING */
+  .typing-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    animation: fadeL 0.3s ease;
+  }
+
+  .typing-dots {
+    background: white;
+    border-radius: 16px 16px 16px 3px;
+    padding: 13px 16px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    border: 1px solid var(--border);
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: bop 1.2s infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bop {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  /* AI BADGE */
+  .ai-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--gold-pale);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 10px;
+    color: #8a6820;
+    font-weight: 600;
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+  }
+
+  /* INPUT */
+  .chat-input-area {
+    padding: 12px 14px;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .chat-input {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 22px;
+    padding: 9px 15px;
+    font-size: 13.5px;
+    font-family: 'Jost', sans-serif;
+    outline: none;
+    color: var(--navy);
+    background: var(--cream);
+    transition: border-color 0.2s;
+  }
+
+  .chat-input:focus { border-color: var(--gold); background: white; }
+  .chat-input::placeholder { color: #aaa; }
+
+  .send-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .send-btn:hover { background: var(--gold); transform: scale(1.05); }
+  .send-btn svg { width: 15px; height: 15px; fill: white; }
+
+  /* FOOTER */
+  .chat-footer {
+    padding: 7px 14px;
+    background: white;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 10px;
+    color: #aaa;
+    letter-spacing: 0.3px;
+  }
+  .chat-footer span { color: var(--gold); font-weight: 600; }
+
+  /* LOADER */
+  .loader {
+    position: absolute;
+    inset: 0;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 20px;
+    z-index: 10;
+    transition: opacity 0.5s;
+  }
+  .loader.gone { opacity: 0; pointer-events: none; }
+  .loader-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--navy);
+    font-weight: 500;
+  }
+  .loader-bar {
+    width: 100px; height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .loader-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 2px;
+    animation: load 1.3s ease forwards;
+  }
+  @keyframes load { from { width:0 } to { width:100% } }
+  .loader-sub { font-size: 11px; color: #aaa; letter-spacing: 0.5px; }
+
+  .reset-btn {
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.45);
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-family: 'Jost', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  @media (max-width: 780px) {
+    .demo-wrap { flex-direction: column; align-items: center; }
+    .left-panel { text-align: center; }
+    .hours-grid { max-width: 340px; margin: 24px auto 0; }
+    .chat-container { width: 100%; max-width: 380px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-wrap">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="clinic-badge">Manhattan · New York</div>
+    <h1>Manhattan<br><em>Smile Studio</em></h1>
+    <div class="location">57 West 57th Street · Midtown, NY 10019</div>
+    <p>New York's premier cosmetic dental studio. Crafting confident smiles for Manhattan's most discerning patients since 2008.</p>
+
+    <ul class="info-list">
+      <li><div class="icon">✦</div>Dental Implants · Invisalign · Veneers</li>
+      <li><div class="icon">✦</div>Teeth Whitening · Emergency Care · Cleaning</li>
+      <li><div class="icon">✆</div>+1 (212) 555-0192 · WhatsApp available</li>
+      <li><div class="icon">@</div><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="96fff8f0f9d6fbf7f8fef7e2e2f7f8e5fbfffaf3e5e2e3f2fff9b8f5f9fb">[email&#160;protected]</a></li>
+    </ul>
+
+    <div class="hours-grid">
+      <div class="hour-card">
+        <div class="day">Mon – Fri</div>
+        <div class="time">8:00 AM – 7:00 PM</div>
+      </div>
+      <div class="hour-card">
+        <div class="day">Saturday</div>
+        <div class="time">9:00 AM – 3:00 PM</div>
+      </div>
+      <div class="hour-card">
+        <div class="day">Sunday</div>
+        <div class="time">Closed</div>
+      </div>
+      <div class="hour-card">
+        <div class="day">Emergency</div>
+        <div class="time">Call anytime</div>
+      </div>
+    </div>
+
+    <div class="powered-by">AI Chatbot by <span>Sheikh AI Agency</span></div>
+    <button class="reset-btn" onclick="resetChat()">↺ Restart Demo</button>
+  </div>
+
+  <!-- CHAT WIDGET -->
+  <div class="chat-container">
+    <div class="chat-widget" style="position:relative">
+
+      <div class="loader" id="loader">
+        <div class="loader-name">Manhattan Smile Studio</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <div class="loader-sub">Connecting to Sofia…</div>
+      </div>
+
+      <!-- HEADER -->
+      <div class="chat-header">
+        <div class="header-avatar">S</div>
+        <div class="online-dot"></div>
+        <div class="header-info">
+          <div class="name">Sofia</div>
+          <div class="role">AI Patient Concierge · Available Now</div>
+        </div>
+        <div class="header-brand">
+          <span class="bn">Manhattan Smile</span>
+          <span class="bs">New York · Est. 2008</span>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="chat-messages" id="msgs"></div>
+
+      <!-- INPUT -->
+      <div class="chat-input-area">
+        <input class="chat-input" id="inp" placeholder="Ask Sofia anything…" onkeydown="if(event.key==='Enter') send()" />
+        <button class="send-btn" onclick="send()">
+          <svg viewBox="0 0 24 24"><path d="M2 21L23 12 2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>
+
+      <div class="chat-footer">Powered by <span>Sheikh AI Agency</span> · AI-assisted · Not medical advice</div>
+    </div>
+  </div>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ─── CLIENT CONFIG ───────────────────────────────────────────────
+const CLIENT = {
+  name:      "Manhattan Smile Studio",
+  location:  "57 West 57th Street, Midtown Manhattan, NY 10019",
+  phone:     "+12125550192",
+  waNumber:  "12125550192",
+  calendly:  "https://calendly.com/manhattansmilestudio",
+  hours:     "Mon–Fri 8am–7pm, Sat 9am–3pm, Sun Closed",
+  services: ["Dental Implants","Invisalign","Veneers & Crowns","Teeth Whitening","Emergency Care","Cleaning & Hygiene"],
+  pricing: {
+    "Dental Implants":    "from $2,800",
+    "Invisalign":         "from $4,200",
+    "Veneers & Crowns":   "from $1,100 per tooth",
+    "Teeth Whitening":    "from $450",
+    "Emergency Care":     "same-day, from $150",
+    "Cleaning & Hygiene": "from $180"
+  },
+  persona:   "Sofia",
+  botLetter: "S"
+};
+
+const SYSTEM_PROMPT = `You are ${CLIENT.persona}, a warm, knowledgeable AI Patient Concierge for ${CLIENT.name} — a premier cosmetic dental studio in Midtown Manhattan, New York.
+
+Clinic: ${CLIENT.name}
+Address: ${CLIENT.location}
+Phone: ${CLIENT.phone}
+Hours: ${CLIENT.hours}
+
+Services & Pricing:
+${Object.entries(CLIENT.pricing).map(([s,p])=>`- ${s}: ${p}`).join('\n')}
+
+Your tone: Warm, professional, slightly upscale — this is a luxury Manhattan clinic. Keep replies to 2–3 sentences max. Always end with a gentle nudge toward booking a consultation or calling the clinic. Never diagnose. If asked clinical questions say "Dr. Chen would be happy to assess that in a consultation."
+
+If asked about location: "We're conveniently located at 57 West 57th Street in Midtown Manhattan, just two blocks from Carnegie Hall."
+If asked about parking: "We're easily accessible via the N/Q/R/W trains at 57th St station. Street parking and garage parking are available nearby."`;
+
+// ─── STATE ───────────────────────────────────────────────────────
+let history = [];
+let selectedSlot = null;
+let selectedService = null;
+
+// ─── HELPERS ─────────────────────────────────────────────────────
+const $msgs = () => document.getElementById('msgs');
+
+function scrollDown() {
+  const m = $msgs();
+  m.scrollTop = m.scrollHeight;
+}
+
+function addEl(html, delay = 0) {
+  return new Promise(r => setTimeout(() => {
+    const d = document.createElement('div');
+    d.innerHTML = html;
+    $msgs().appendChild(d);
+    scrollDown();
+    r();
+  }, delay));
+}
+
+function botMsg(text, extra='', delay=0) {
+  return addEl(`
+    <div class="msg-bot">
+      <div class="bot-av">${CLIENT.botLetter}</div>
+      <div>
+        <div class="bot-name">${CLIENT.persona} · Concierge</div>
+        <div class="bot-bubble">${text}</div>
+        ${extra}
+      </div>
+    </div>`, delay);
+}
+
+function userMsg(text) {
+  const d = document.createElement('div');
+  d.innerHTML = `<div class="msg-user"><div class="user-bubble">${text}</div></div>`;
+  $msgs().appendChild(d);
+  scrollDown();
+}
+
+function showTyping(delay=0) {
+  return new Promise(r => setTimeout(() => {
+    const d = document.createElement('div');
+    d.id = 'typ';
+    d.innerHTML = `<div class="typing-wrap">
+      <div class="bot-av">${CLIENT.botLetter}</div>
+      <div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>`;
+    $msgs().appendChild(d);
+    scrollDown();
+    r();
+  }, delay));
+}
+
+function removeTyping() {
+  const t = document.getElementById('typ');
+  if (t) t.remove();
+}
+
+function showQR(buttons) {
+  const old = document.getElementById('qrEl');
+  if (old) old.remove();
+  const d = document.createElement('div');
+  d.id = 'qrEl';
+  d.innerHTML = `<div class="quick-replies">${
+    buttons.map(b => `<button class="qr-btn" onclick="qrPick('${b}')">${b}</button>`).join('')
+  }</div>`;
+  $msgs().appendChild(d);
+  scrollDown();
+}
+
+function disableQR(chosen) {
+  document.querySelectorAll('.qr-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === chosen) b.classList.add('active');
+  });
+}
+
+// ─── AI ──────────────────────────────────────────────────────────
+async function getAI(userText) {
+  history.push({ role: 'user', content: userText });
+  try {
+    const res = await fetch('https://sheikh-ai-proxy.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 180,
+        system: SYSTEM_PROMPT,
+        messages: history
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || "I'd be happy to help — could you share a little more detail?";
+    history.push({ role: 'assistant', content: reply });
+    return reply;
+  } catch {
+    return "Thank you for reaching out! Please call us on (212) 555-0192 or send us a WhatsApp message and our team will assist you right away.";
+  }
+}
+
+// ─── FLOWS ───────────────────────────────────────────────────────
+async function qrPick(label) {
+  disableQR(label);
+  userMsg(label);
+
+  if (label === 'Book a Consultation') { await bookingFlow(); return; }
+  if (label === 'WhatsApp Us')         { await waFlow(); return; }
+  if (label === 'Emergency')           { await emergencyFlow(); return; }
+
+  selectedService = label;
+  await showTyping(200);
+  await new Promise(r => setTimeout(r, 1300));
+  removeTyping();
+  const reply = await getAI(`I'm interested in ${label}`);
+  await botMsg(reply, `<div class="ai-tag">✦ AI Response</div>`);
+  await new Promise(r => setTimeout(r, 400));
+  await botMsg("Would you like to schedule a complimentary consultation?");
+  showQR(['Book a Consultation', 'Ask a Question', 'WhatsApp Us']);
+}
+
+async function bookingFlow() {
+  await showTyping(200);
+  await new Promise(r => setTimeout(r, 900));
+  removeTyping();
+  await botMsg("Of course. Here are our next available appointments:");
+
+  const d = document.createElement('div');
+  d.innerHTML = `
+    <div class="booking-card">
+      <div class="bc-title">Available This Week</div>
+      <div style="font-size:11px;color:#888;margin-bottom:8px">Select a time slot</div>
+      <div class="slots">
+        <div class="slot" onclick="pickSlot(this,'Mon 9:00 AM')">Mon<br><strong>9:00 AM</strong></div>
+        <div class="slot" onclick="pickSlot(this,'Mon 3:00 PM')">Mon<br><strong>3:00 PM</strong></div>
+        <div class="slot" onclick="pickSlot(this,'Tue 10:30 AM')">Tue<br><strong>10:30 AM</strong></div>
+        <div class="slot" onclick="pickSlot(this,'Wed 2:00 PM')">Wed<br><strong>2:00 PM</strong></div>
+        <div class="slot" onclick="pickSlot(this,'Thu 11:00 AM')">Thu<br><strong>11:00 AM</strong></div>
+        <div class="slot" onclick="pickSlot(this,'Fri 9:30 AM')">Fri<br><strong>9:30 AM</strong></div>
+      </div>
+      <button class="confirm-btn" onclick="confirmBooking()">Confirm via Calendly →</button>
+    </div>`;
+  $msgs().appendChild(d);
+  scrollDown();
+}
+
+function pickSlot(el, time) {
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedSlot = time;
+}
+
+async function confirmBooking() {
+  if (!selectedSlot) { alert('Please select a time slot.'); return; }
+  const d = document.createElement('div');
+  d.innerHTML = `
+    <div class="confirmed-card">
+      <div class="cc-gold">Appointment Confirmed</div>
+      <div class="cc-title">We'll see you soon!</div>
+      <div class="cc-detail">
+        ${selectedService ? selectedService + '<br>' : ''}
+        <strong>${selectedSlot}</strong><br>
+        57 West 57th Street, Midtown<br>
+        Manhattan, NY 10019<br><br>
+        A Calendly confirmation has been sent to your email.
+      </div>
+    </div>`;
+  $msgs().appendChild(d);
+  scrollDown();
+  await new Promise(r => setTimeout(r, 700));
+  await botMsg("Is there anything else I can help you with before your visit?");
+  showQR(['No, thank you!', 'WhatsApp Us', 'Ask a Question']);
+}
+
+async function waFlow() {
+  await showTyping(200);
+  await new Promise(r => setTimeout(r, 700));
+  removeTyping();
+  const d = document.createElement('div');
+  d.innerHTML = `
+    <div class="wa-card">
+      <div class="wa-title">Continue on WhatsApp</div>
+      <div class="wa-sub">Our team responds within 10 minutes, Mon–Sat.</div>
+      <button class="wa-btn" onclick="window.open('https://wa.me/${CLIENT.waNumber}?text=Hi%20Manhattan%20Smile%20Studio%2C%20I%20found%20you%20on%20your%20website%20and%20would%20like%20to%20enquire%20about%20a%20treatment.','_blank')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.138.563 4.14 1.535 5.875L.057 23.5l5.782-1.516A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.697 9.697 0 01-4.95-1.355l-.355-.211-3.676.964.98-3.585-.232-.368A9.697 9.697 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+        Chat on WhatsApp
+      </button>
+    </div>`;
+  $msgs().appendChild(d);
+  scrollDown();
+}
+
+async function emergencyFlow() {
+  await showTyping(200);
+  await new Promise(r => setTimeout(r, 800));
+  removeTyping();
+  await botMsg("We offer same-day emergency appointments. Please call us immediately at <strong>(212) 555-0192</strong> — our team will get you seen as soon as possible.");
+  showQR(['Call Now', 'WhatsApp Us', 'Book Online']);
+}
+
+// ─── FREE TEXT SEND ───────────────────────────────────────────────
+async function send() {
+  const inp = document.getElementById('inp');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  userMsg(text);
+
+  const old = document.getElementById('qrEl');
+  if (old) old.remove();
+
+  await showTyping(200);
+  await new Promise(r => setTimeout(r, 1400));
+  removeTyping();
+  const reply = await getAI(text);
+  await botMsg(reply, `<div class="ai-tag">✦ AI Response</div>`);
+  await new Promise(r => setTimeout(r, 400));
+  showQR(['Book a Consultation', 'WhatsApp Us', 'Ask Another Question']);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────
+async function init() {
+  setTimeout(() => document.getElementById('loader').classList.add('gone'), 1500);
+  await botMsg("Good day! Welcome to Manhattan Smile Studio. ✦", '', 1700);
+  await botMsg("I'm Sofia, your personal AI concierge. How may I assist you today?", '', 2300);
+  setTimeout(() => {
+    showQR([
+      'Dental Implants',
+      'Invisalign',
+      'Veneers & Crowns',
+      'Teeth Whitening',
+      'Emergency Care',
+      'Cleaning & Hygiene',
+      'Book a Consultation',
+      'WhatsApp Us'
+    ]);
+  }, 3000);
+}
+
+function resetChat() {
+  document.getElementById('msgs').innerHTML = '';
+  history = [];
+  selectedSlot = null;
+  selectedService = null;
+  const loader = document.getElementById('loader');
+  l
