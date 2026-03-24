@@ -18,6 +18,21 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Extract user personalization context from request
+    const { userName = '', userEmail = '', userPhone = '', userService = '', ...restBody } = req.body;
+    
+    // Build personalization context
+    let personalizedSystemPrompt = restBody.system || '';
+    if (userName) {
+      personalizedSystemPrompt += `\n\nYou are speaking with ${userName}.`;
+    }
+    if (userService) {
+      personalizedSystemPrompt += `\n\nThe user is interested in: ${userService}.`;
+    }
+    if (userEmail || userPhone) {
+      personalizedSystemPrompt += `\n\nContact: ${userEmail || ''} ${userPhone || ''}`;
+    }
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -25,7 +40,10 @@ export default async function handler(req, res) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify({
+        ...restBody,
+        system: personalizedSystemPrompt
+      })
     });
 
     const data = await response.json();
