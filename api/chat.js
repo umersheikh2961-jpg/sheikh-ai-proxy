@@ -11,18 +11,18 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const geminiKey = process.env.GOOGLE_API_KEY;
 
-  if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured' });
+  if (!geminiKey) {
+    return res.status(500).json({ error: 'Gemini API key not configured' });
   }
 
   try {
-    // Extract user personalization context from request
-    const { userName = '', userEmail = '', userPhone = '', userService = '', ...restBody } = req.body;
-    
-    // Build personalization context
-    let personalizedSystemPrompt = restBody.system || '';
+    // Extract personalization context from request
+    const { userName = '', userEmail = '', userPhone = '', userService = '', messages = [], system = '' } = req.body;
+
+    // Build system prompt
+    let personalizedSystemPrompt = system || '';
     if (userName) {
       personalizedSystemPrompt += `\n\nYou are speaking with ${userName}.`;
     }
@@ -33,23 +33,43 @@ export default async function handler(req, res) {
       personalizedSystemPrompt += `\n\nContact: ${userEmail || ''} ${userPhone || ''}`;
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        ...restBody,
-        system: personalizedSystemPrompt
-      })
-    });
+    // Convert messages for Gemini
+    const contents = messages.map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.content }]
+    }));
+
+    const response = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + geminiKey,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: personalizedSystemPrompt }]
+          },
+          contents,
+          generationConfig: { maxOutputTokens: 180 }
+        })
+      }
+    );
 
     const data = await response.json();
+
+    // Make Gemini's response compatible with front-end expectations
+    if (data.candidates && data.candidates[0]) {
+      return res.status(200).json({
+        content: [{
+          type: 'text',
+          text: data.candidates[0].content.parts[0].text
+        }]
+      });
+    }
+
     return res.status(200).json(data);
 
   } catch (error) {
+    console.error('Gemini API Error:', error);
     return res.status(500).json({ error: error.message });
   }
 }
