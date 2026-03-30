@@ -922,7 +922,7 @@ async function getAI(userText){
     const res=await fetch('https://sheikh-ai-proxy.vercel.app/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:180,system:SYSTEM_PROMPT,messages:history})
+      body:JSON.stringify({system:SYSTEM_PROMPT,messages:history})
     });
     const data=await res.json();
     const reply=data.content?.[0]?.text||"I'd love to help! Could you share a bit more detail?";
