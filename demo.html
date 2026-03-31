@@ -850,6 +850,29 @@ function submitForm() {
   document.getElementById('formSuccess').style.display = 'block';
 
   // In production: send to n8n webhook or email
+  // n8n Webhook Integration Code
+const webhookUrl = 'https://umer1.app.n8n.cloud/webhook/cdf46065-b22a-4322-b603-2066ebeb6998';
+
+fetch(webhookUrl, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name: name,
+    clinic: clinic,
+    phone: phone,
+    email: email
+  }),
+})
+.then(response => {
+  if (response.ok) {
+    console.log('Data successfully sent to n8n!');
+  }
+})
+.catch((error) => {
+  console.error('Error sending to n8n:', error);
+});
   console.log('Lead:', { name, clinic, phone, email });
 }
 
