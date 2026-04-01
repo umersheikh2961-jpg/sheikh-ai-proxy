@@ -948,7 +948,7 @@ async function getAI(userText){
       body:JSON.stringify({messages:history,system:SYSTEM_PROMPT})
     });
     const data=await res.json();
-    const reply=data.content?.[0]?.text||"I'd love to help! Could you share a bit more detail?";
+    const reply=data.reply||"I'd love to help! Could you share a bit more detail?";
     history.push({role:'assistant',content:reply});
     return reply;
   } catch(err) {
