@@ -985,6 +985,17 @@ async function handleLeadStep(text){
     if(!ok){ await botMsg("That does not look like a valid email — for example: john@gmail.com"); return; }
     lead.email=text.trim(); leadStep=null;
     document.getElementById('inp').placeholder="Ask Sofia anything…";
+    // Send chatbot lead to n8n
+fetch('https://umer1.app.n8n.cloud/webhook/sheikh', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    name: lead.name,
+    phone: lead.phone,
+    email: lead.email,
+    source: 'chatbot'
+  }),
+}).catch(err => console.error('n8n error:', err));
     await showLeadConfirmed();
   }
 }
