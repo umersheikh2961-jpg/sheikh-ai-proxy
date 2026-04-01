@@ -990,11 +990,13 @@ fetch('https://umer1.app.n8n.cloud/webhook/sheikh', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    name: lead.name,
-    phone: lead.phone,
-    email: lead.email,
-    source: 'chatbot'
-  }),
+  name: lead.name,
+  phone: lead.phone,
+  email: lead.email,
+  source: 'chatbot',
+  service: selectedService || '',
+  slot: selectedSlot || ''
+}),
 }).catch(err => console.error('n8n error:', err));
     await showLeadConfirmed();
   }
