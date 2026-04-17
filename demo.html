@@ -1134,8 +1134,8 @@ async function send(){
 // ── INIT ──────────────────────────────────────
 async function init(){
   setTimeout(()=>document.getElementById('loader').classList.add('gone'), 1500);
-  await botMsg("Good day! Welcome to Manhattan Smile Studio.", 1700);
-  await botMsg("I am Sofia, your personal AI concierge. How may I assist you today?", 2400);
+  await botMsg("Hi! I help you schedule dental consultations instantly — even after hours.", 1700);
+  await botMsg("What treatment are you interested in today?", 2400);
   setTimeout(()=>{
     showQR(['Dental Implants','Invisalign','Veneers & Crowns','Teeth Whitening','Emergency Care','Cleaning & Hygiene','Book a Consultation','WhatsApp Us']);
   }, 3100);
