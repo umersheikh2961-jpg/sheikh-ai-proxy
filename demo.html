@@ -1142,13 +1142,19 @@ async function init(){
 }
 
 init();
-// Dynamic clinic name from URL parameter
-const urlParams = new URLSearchParams(window.location.search);
-const clinicParam = urlParams.get('name');
-if (clinicParam) {
-  document.querySelectorAll('.clinic-name').forEach(el => {
-    el.textContent = decodeURIComponent(clinicParam.replace(/\+/g, ' '));
-  });
+window.addEventListener('load', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const clinicParam = urlParams.get('name');
+  if (clinicParam) {
+    const decoded = decodeURIComponent(clinicParam.replace(/\+/g, ' '));
+    document.querySelectorAll('.clinic-name').forEach(el => {
+      el.textContent = decoded;
+    });
+    document.querySelectorAll('.demo-label').forEach(el => {
+      el.textContent = 'Live Demo — ' + decoded;
+    });
+  }
+});
 }</script>
 </body>
 </html>
