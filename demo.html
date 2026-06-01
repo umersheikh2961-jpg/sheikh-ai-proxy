@@ -1142,6 +1142,13 @@ async function init(){
 }
 
 init();
-</script>
+// Dynamic clinic name from URL parameter
+const urlParams = new URLSearchParams(window.location.search);
+const clinicParam = urlParams.get('name');
+if (clinicParam) {
+  document.querySelectorAll('.clinic-name').forEach(el => {
+    el.textContent = decodeURIComponent(clinicParam.replace(/\+/g, ' '));
+  });
+}</script>
 </body>
 </html>
