@@ -676,7 +676,7 @@ html, body {
     <div class="agency-name">Sheikh<br><em>AI Agency</em></div>
     <div class="agency-tagline">We turn dental clinics into 24/7 revenue machines.</div>
 
-    <div class="demo-label">Live Demo — <span class="clinic-name">Manhattan Smile Studio</span> NYC</div>
+    <div class="demo-label">Live Demo — Manhattan Smile Studio NYC</div>
     <div class="demo-headline">This is what your<br>clinic could have.</div>
     <div class="demo-sub">A fully branded AI chatbot that answers patient questions, captures leads, books consultations and hands off to WhatsApp — running 24/7 without you lifting a finger.</div>
 
@@ -740,7 +740,7 @@ html, body {
 
       <div class="chat-widget">
         <div class="loader" id="loader">
-          <div class="loader-name"><span class="clinic-name">Manhattan Smile Studio</span></div>
+          <div class="loader-name">Manhattan Smile Studio</div>
           <div class="loader-bar"><div class="loader-fill"></div></div>
           <div class="loader-sub">Connecting to Sofia…</div>
         </div>
@@ -878,13 +878,13 @@ console.log('Lead:', { name, clinic, phone, email });
 
 // ── CHATBOT ──────────────────────────────────
 const CLIENT = {
- name: "Manhattan Smile Studio",
+  name: "Manhattan Smile Studio",
   waNumber: "12125550192",
   persona: "Sofia",
   botLetter: "S"
 };
 
-const SYSTEM_PROMPT = "You are Sofia, a warm AI Patient Concierge for Manhattan Smile Studio a premier cosmetic dental studio in Midtown Manhattan. Address: 57 West 57th Street, NY 10016. Phone: (212) 555-0192. Hours: Mon-Fri 8am-7pm, Sat 9am-3pm. Services: Dental Implants, Invisalign, Veneers and Crowns, Teeth Whitening, Emergency Care, Cleaning and Hygiene. Tone: Warm, professional, upscale Manhattan. Keep replies to 2-3 sentences max. Always nudge toward booking a free consultation. Never give exact prices. Never diagnose. If asked about yourself say you are Sofia, an AI Patient Concierge for <span class="clinic-name">Manhattan Smile Studio</span>.";
+const SYSTEM_PROMPT = "You are Sofia, a warm AI Patient Concierge for Manhattan Smile Studio, a premier cosmetic dental studio in Midtown Manhattan. Address: 57 West 57th Street, NY 10016. Phone: (212) 555-0192. Hours: Mon-Fri 8am-7pm, Sat 9am-3pm. Services: Dental Implants, Invisalign, Veneers and Crowns, Teeth Whitening, Emergency Care, Cleaning and Hygiene. Tone: Warm, professional, upscale Manhattan. Keep replies to 2-3 sentences max. Always nudge toward booking a free consultation. Never give exact prices. Never diagnose. If asked about yourself say you are Sofia, an AI Patient Concierge for Manhattan Smile Studio.";
 
 let history = [], selectedSlot = null, selectedService = null;
 let lead = { name:'', phone:'', email:'' }, leadStep = null;
@@ -1020,7 +1020,7 @@ async function showLeadConfirmed(){
   </div>`;
   $msgs().appendChild(d); scrollDown();
   await new Promise(r=>setTimeout(r,700));
-  await botMsg("We look forward to welcoming you to <span class="clinic-name">Manhattan Smile Studio</span>! Is there anything else I can help with?");
+  await botMsg("We look forward to welcoming you to Manhattan Smile Studio! Is there anything else I can help with?");
   showQR(['No, thank you!','WhatsApp Us','Ask a Question']);
 }
 
@@ -1142,19 +1142,6 @@ async function init(){
 }
 
 init();
-window.addEventListener('load', function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const clinicParam = urlParams.get('name');
-  if (clinicParam) {
-    const decoded = decodeURIComponent(clinicParam.replace(/\+/g, ' '));
-    document.querySelectorAll('.clinic-name').forEach(el => {
-      el.textContent = decoded;
-    });
-    document.querySelectorAll('.demo-label').forEach(el => {
-      el.textContent = 'Live Demo — ' + decoded;
-    });
-  }
-});
-}</script>
+</script>
 </body>
 </html>
