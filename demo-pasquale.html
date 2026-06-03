@@ -1025,12 +1025,14 @@ async function showLeadConfirmed(){
 }
 
 const serviceInfo = {
-  'Dental Implants':    "Dental implants are one of our most popular treatments — they look, feel and function just like natural teeth and with proper care, last a lifetime. Pricing is based on your individual needs, which our doctors assess at your free consultation.",
-  'Invisalign':         "Invisalign clear aligners are a virtually invisible way to straighten your smile — perfect for busy professionals. Most treatments take 12–18 months and your progress is monitored closely by our specialists.",
-  'Veneers & Crowns':   "Our porcelain veneers and crowns can correct chips, stains, gaps and misalignment — often transforming a smile in just 2 visits. Our doctors will create a fully personalised treatment plan for you.",
-  'Teeth Whitening':    "Our professional whitening treatments can lighten your smile by up to 8 shades — far more effective than any over-the-counter product. The best option depends on your current shade, assessed at your visit.",
-  'Emergency Care':     "We offer same-day emergency appointments — whether it is a broken tooth, severe pain or a lost filling, our team will get you seen as quickly as possible. Call (212) 555-0192 for immediate help.",
-  'Cleaning & Hygiene': "Our professional cleaning appointments use the latest ultrasonic technology for a thorough, comfortable clean. We also create a personalised oral health plan to keep your smile in top shape."
+
+  'HD Lipo':            "High-Definition Liposuction sculpts and contours the body to highlight natural muscle definitions. A fully customized surgical plan is tailored to your goals during your initial consultation.",
+  'Breast Augmentation': "We offer premium breast enhancement procedures using top-tier implants to achieve your desired shape, volume, and body symmetry safely and beautifully.",
+  'Tummy Tuck':         "Abdominoplasty removes excess skin and restores weakened abdominal muscles to help you achieve a flatter, firmer, and more toned midsection profile.",
+  'Mommy Makeover':     "A completely personalized combination of body contouring and breast procedures designed to help you restore your pre-pregnancy shape and confidence.",
+  'Emergency Care':     "We provide prompt support for urgent post-operative evaluations or immediate surgical concerns. Please contact our office directly at (516) 350-8168 for urgent assistance.",
+  'BBL (Brazilian Butt Lift)': "An advanced fat-transfer procedure that utilizes your body's own natural fat to enhance the contour, volume, and lift of your buttocks."
+
 };
 
 async function qrPick(label){
@@ -1134,10 +1136,10 @@ async function send(){
 // ── INIT ──────────────────────────────────────
 async function init(){
   setTimeout(()=>document.getElementById('loader').classList.add('gone'), 1500);
-  await botMsg("Hi! I help you schedule dental consultations instantly — even after hours.", 1700);
+  await botMsg("Hi! I help you schedule cosmetic surgery consultations instantly", 1700);
   await botMsg("What treatment are you interested in today?", 2400);
   setTimeout(()=>{
-    showQR(['Dental Implants','Invisalign','Veneers & Crowns','Teeth Whitening','Emergency Care','Cleaning & Hygiene','Book a Consultation','WhatsApp Us']);
+    showQR(['HD Lipo','Breast Augmentation','Tummy Tuck','Mommy Makeover','Emergency Care','BBL (Brazilian Butt Lift)','Book a Consultation','WhatsApp Us']);
   }, 3100);
 }
 
